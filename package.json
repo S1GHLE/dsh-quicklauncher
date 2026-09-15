@@ -1,0 +1,35 @@
+{
+  "name": "dsh-keepup",
+  "version": "1.0.0",
+  "private": true,
+  "description": "One-click Windows launcher for DeepSeek Harness: checks for updates, bootstraps source or npm installs, and starts the Web UI.",
+  "keywords": [
+    "deepseek-harness",
+    "deepseek",
+    "dsh",
+    "launcher",
+    "updater",
+    "one-click",
+    "windows",
+    "powershell"
+  ],
+  "homepage": "https://github.com/S1GHLE/dsh-keepup#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/S1GHLE/dsh-keepup.git"
+  },
+  "bugs": {
+    "url": "https://github.com/S1GHLE/dsh-keepup/issues"
+  },
+  "license": "MIT",
+  "author": "S1GHLE",
+  "scripts": {
+    "icon": "node tools/make-dsh-icon.mjs",
+    "icon:preview": "node tools/make-dsh-icon.mjs --preview",
+    "shortcut": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/make-dsh-shortcut.ps1 -StartMenu",
+    "smoke": "powershell -NoProfile -ExecutionPolicy Bypass -File dsh-keepup.ps1 --smoke-version"
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  }
+}

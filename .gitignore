@@ -1,0 +1,17 @@
+# --- launcher runtime state (machine-local, never commit) -------------------
+.dsh-launch-config.json
+.dsh-launch-skip.txt
+
+# --- toolchain installed by the launcher's NPM mode ------------------------
+# ~214 MB of node_modules; recreated by running the launcher and choosing NPM.
+tools/dsh-npm/
+
+# --- local source checkouts -------------------------------------------------
+deepseek-harness/
+
+# --- OS / editor noise ------------------------------------------------------
+Thumbs.db
+desktop.ini
+.DS_Store
+*.swp
+*.tmp
