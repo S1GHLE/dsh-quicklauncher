@@ -1,242 +1,248 @@
-# dsh-quicklauncher
+<p align="center">
+  <img src="assets/dsh-icon.png" width="88" height="88" alt="dsh-quicklauncher 图标">
+</p>
 
-**DeepSeek Harness 的一键启动器：双击检查更新 → 按需更新 → 启动 Web UI。**
+<h1 align="center">dsh-quicklauncher</h1>
 
-Windows 上双击一个图标就能用 DSH，而且不会让你停留在旧版本上。
+<p align="center">
+  <strong>双击启动 DSH，有更新时顺手更新。</strong><br>
+  适用于 Windows 的 DeepSeek Harness 社区启动器
+</p>
 
-> 本项目是社区作品，与 DeepSeek 官方无隶属关系，也未获官方背书。详见[免责声明](#免责声明)。
+<p align="center">
+  <a href="#快速开始">快速开始</a> ·
+  <a href="#启动与更新">启动与更新</a> ·
+  <a href="#常见问题">常见问题</a> ·
+  <a href="#进阶配置">进阶配置</a>
+</p>
 
----
+把安装、更新检查和 Web 界面启动放进同一个入口。第一次运行按提示完成安装，以后双击 `.cmd` 文件或桌面快捷方式即可使用。
 
-## 它解决什么问题
+- **两种安装方式**：使用 npm 发布版，或从源码安装并构建。
+- **启动前检查更新**：展示版本或提交信息，由你选择是否更新。
+- **记住跳过的更新**：检测到的更新信息不变时，下次直接启动。
+- **自动打开浏览器**：启动服务后等待本地端口可用，再打开 Web 界面。
 
-`dsh web` 本身没问题，问题在于**你会忘记更新它**。DSH 迭代很快（每周多个版本），等你哪天发现自己落后了几十个提交、或者构建产物早就过期时，通常已经踩到过时的 bug 了。
-
-`dsh-quicklauncher` 在每次启动前插一步：
-
-1. 探测 `127.0.0.1:3080`——DSH 已经在跑就直接开浏览器，不重复拉起第二个实例；
-2. 检查是否有更新，**有的话弹菜单让你选**"立即更新"还是"暂不更新"；
-3. 按你的选择更新（或跳过），然后启动服务、等服务就绪、用默认浏览器打开带 token 的地址。
-
-选"暂不更新"会被记住，直到出现**新的**更新才会再问。
-
-### 和现成方案的区别
-
-DSH 启动器已经有人在做，主要是 npm 上的 [`dsh-quickstart`](https://www.npmjs.com/package/dsh-quickstart)（第三方项目，作者 qzhqzh）。
-
-> **注意别混淆**：本仓库叫 `dsh-quicklauncher`，是**文件夹分发**的社区作品，**没有发布到 npm**；它与 npm 上的 `dsh-quickstart` 是两个互不相关的项目，名字相近纯属巧合。
-
-我们的侧重点不同：
-
-| | `dsh-quickstart`（npm） | **`dsh-quicklauncher`**（本仓库） |
-| --- | --- | --- |
-| 双击启动 | ✅ | ✅ |
-| 就绪轮询 + 自动开浏览器 | ✅ | ✅ |
-| 隐藏控制台窗口 | ✅ | ❌ 保留窗口（能看到更新进度和日志） |
-| 看门狗自动重启 | ✅ | ❌ |
-| **检查更新并提示** | ❌ | ✅ |
-| **一键完成更新**（拉代码 / 重装包 + 重建） | ❌ | ✅ |
-| **自动识别源码环境，缺失时引导安装** | ❌ | ✅ |
-| 前置要求 | 需先 `npm i -g @deepseek-ai/dsh` | 只要 Node.js，其余它自己装 |
-| 分发形态 | npm 全局包 | 一个文件夹，拷走即用 |
-
-如果你只想"双击打开、别管更新"，`dsh-quickstart` 可能更合你意。如果你想"永远是最新的、而且不想手动折腾构建"，这款可能更合你意。
-
----
-
-## 前置要求
-
-| 场景 | 需要什么 |
-| --- | --- |
-| 启动已装好的 DSH | **Node.js `^22.19.0` 或 `>=24.0.0`**（注意：Node 23 不被 DSH 接受） |
-| 选「源码模式」 | 额外需要 git、pnpm（pnpm 缺失时会自动尝试安装） |
-
-Windows PowerShell 5.1 即可，不需要 PowerShell 7。
-
----
+> 本项目由社区维护，与 DeepSeek 官方无隶属关系，也未获官方背书。
 
 ## 快速开始
 
-1. 把这个文件夹放到任意位置（**别放进 DSH 源码目录里面**）；
-2. 双击 `dsh-quicklauncher.cmd`；
-3. 首次运行会让你选运行方式：
+### 1. 准备环境
 
-   ```
-   1) 源码模式（推荐开发者）
-      git clone + pnpm install + pnpm run build
-      需要 git 和 pnpm；约 1.5 GB，首次构建十几分钟
-      更新方式：git pull，能看到每个提交
+| 环境 | 要求 |
+| --- | --- |
+| 系统 | Windows，使用 Windows PowerShell 5.1 即可 |
+| Node.js | 按当前启动器的校验规则：`^22.19.0` 或 `>=24.0.0`，不接受 Node.js 23 |
+| npm | NPM 模式需要；通常随 Node.js 一起安装 |
+| Git、pnpm | 源码模式需要；未找到 pnpm 时，启动器会尝试自动安装 |
 
-   2) NPM 模式（推荐只想用的人）
-      npm install @deepseek-ai/dsh
-      只需要 Node.js；约 214 MB，一分钟装完
-      更新方式：跟随 npm 发布版
+首次安装和更新需要联网。相关命令应能在终端中直接运行。
 
-   3) 退出
-   ```
+### 2. 下载并双击
 
-   选择会写进 `.dsh-launch-config.json`，以后不再询问。
-
-4. 想要桌面图标：
-
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File tools\make-dsh-shortcut.ps1 -StartMenu
-   ```
-
-   然后右键桌面图标 → **固定到任务栏**，就能一键启动了。
-
-### 两种模式怎么选
-
-| | 源码模式 | NPM 模式 |
-| --- | --- | --- |
-| 磁盘占用 | 约 1.5 GB | 约 214 MB |
-| 首次耗时 | 十几分钟（含构建） | 约 1 分钟 |
-| 前置依赖 | Node + git + pnpm | 只要 Node |
-| 能看到每个提交 | ✅ | ❌ 只有版本号 |
-| 更新方式 | `git pull` + 重新构建 | `npm install @latest` |
-| 首次构建失败的风险 | 有（原生扩展需要 C++ 工具链） | 基本没有 |
-
-**只想用 DSH → 选 NPM 模式。想跟着源码走、甚至改代码 → 选源码模式。**
-
-源码模式首次构建失败时，它会问你要不要改用 NPM 模式先把 DSH 跑起来。
-
----
-
-## 日常使用
+从[本仓库](https://github.com/S1GHLE/dsh-quicklauncher)选择 **Code → Download ZIP**，解压到一个固定目录；也可以克隆仓库：
 
 ```powershell
-# 双击即可，等价于：
+git clone https://github.com/S1GHLE/dsh-quicklauncher.git
+```
+
+打开文件夹，双击 **`dsh-quicklauncher.cmd`**。
+
+请保留完整目录，尤其是同级的 `.cmd` 和 `.ps1` 文件。建议把启动器与 DSH 源码分别放在独立目录中。
+
+### 3. 选择运行方式
+
+没有检测到可用安装时，启动器会显示安装菜单：
+
+| 选择 | 适合谁 | 首次运行会做什么 | 后续更新来源 |
+| --- | --- | --- | --- |
+| **2 · NPM 模式** | 日常使用 DSH 的用户 | 在启动器的本地工具目录安装 `@deepseek-ai/dsh` | npm 的 `latest` 发布版 |
+| **1 · 源码模式** | 需要跟进源码或修改代码的开发者 | 克隆仓库、安装依赖、构建项目 | 当前分支对应的 `origin` 远端分支 |
+
+**日常使用建议选择 `2`，安装菜单直接回车也会选择 NPM 模式。** 源码模式需要完成本地构建，耗时取决于网络、电脑性能和依赖情况。
+
+安装成功后会保存模式和路径，并启动 DSH、打开浏览器。如果已经发现可用的源码目录或本地 NPM 安装，启动器会直接使用它。
+
+### 可选：添加桌面快捷方式
+
+在启动器目录打开 PowerShell，执行：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\make-dsh-shortcut.ps1 -StartMenu
+```
+
+这会创建带图标的桌面和开始菜单快捷方式。以后双击快捷方式即可；移动启动器文件夹后，请重新生成快捷方式。
+
+## 启动与更新
+
+日常使用只需要双击入口，也可以在启动器目录运行：
+
+```powershell
 .\dsh-quicklauncher.cmd
-
-# 或者直接调 PowerShell
-powershell -ExecutionPolicy Bypass -File dsh-quicklauncher.ps1
 ```
 
-### 参数与开关
+每次启动大致经过以下步骤：
 
-| 开关 | 作用 |
-| --- | --- |
-| `--reset` | 删除保存的模式选择，下次重新询问 |
-| `--smoke-run` | 走真实流程，但不打开浏览器、不等按键（用于自动化测试） |
-| `--smoke-version` | 只打印检测结果（版本、模式、工具链、端口），不启动 |
-| `--smoke-launch` | 只打印解析出的启动命令 |
-| `--smoke-menu` | 用示例数据渲染更新提示 |
-| `--smoke-install` | 用示例数据渲染安装菜单 |
-
-`--smoke-*` 系列都不产生副作用：不会安装任何东西，也不会写配置文件。
-
-### 环境变量
-
-| 变量 | 作用 |
-| --- | --- |
-| `DSH_LAUNCHER_SKIP_CHECK=1` | 跳过更新检查，直接启动 |
-| `DSH_LAUNCHER_MODE=source\|npm` | 强制指定运行模式，覆盖配置文件 |
-| `DSH_LAUNCHER_REPO=<路径>` | 指定源码 checkout 位置 |
-| `DSH_LAUNCHER_TOOLS=<路径>` | 指定 NPM 模式的安装目录（默认 `tools\dsh-npm`） |
-| `DSH_LAUNCHER_CONFIG=<路径>` | 换一个配置文件路径（默认项目根下的 `.dsh-launch-config.json`） |
-| `DSH_LAUNCHER_NO_AUTODISCOVER=1` | 不做源码目录自动探测 |
-| `DSH_WEB_PORT=<端口>` | 换端口（默认 3080） |
-| `DSH_HOME=<路径>` | DSH 的用户目录（默认 `%USERPROFILE%\.dsh`） |
-
-### 强制重新探测源码目录
-
-默认情况下它会按这个顺序找源码 checkout，找到就用源码模式：
-
-1. `DSH_LAUNCHER_REPO` 指定的路径
-2. 配置文件里记的路径
-3. 启动器所在目录、以及它的祖先目录下的 `deepseek-harness\`
-4. `%USERPROFILE%\deepseek-harness`
-
-想让它在没有配置的情况下不要自动乱认，设 `DSH_LAUNCHER_NO_AUTODISCOVER=1`。
-
----
-
-## 目录结构
-
+```text
+双击启动器
+  ├─ 本地端口已可连接 → 直接打开浏览器
+  └─ 本地端口未开放
+       → 查找安装，必要时引导安装
+       → 检查更新，按选择更新或跳过
+       → 在独立窗口启动 DSH
+       → 等待端口可用，打开浏览器
 ```
+
+默认地址为 `http://127.0.0.1:3080/`，启动等待时间最长约 120 秒。DSH 在独立窗口中运行，**关闭那个服务窗口即可停止服务**；关闭浏览器页面不会停止服务。
+
+### 发现更新时
+
+- **输入 `1` 或直接回车**：立即更新，然后尝试启动。
+- **输入 `2`**：跳过本次更新，启动已安装版本。
+
+跳过记录保存在 `.dsh-launch-skip.txt`。检测到的更新信息没有变化时，不会重复询问；删除这个文件可恢复提示。
+
+| 模式 | 更新行为 |
+| --- | --- |
+| NPM 模式 | 在对应安装目录执行 `npm install @deepseek-ai/dsh@latest` |
+| 源码模式 | 检查远端后，以 `git merge --ff-only` 合并当前分支的远端更新，执行 `pnpm install`；代码发生变化时再运行 `pnpm run build` |
+
+源码更新检测到未提交改动时会跳过自动更新；本地与远端分支无法快进合并时，更新会中止。检查更新本身会联网，源码模式还会执行 `git fetch` 更新 Git 元数据。
+
+更新检查失败后，启动器仍会尝试启动现有安装。**更新失败不提供自动回滚**，尤其是源码已经合并、依赖安装或构建随后失败的情况，需要查看窗口中的错误信息。
+
+## 常见问题
+
+### 已经安装过 DSH，还需要再装吗？
+
+启动器会读取保存的配置，并尝试发现已有的源码目录或本地 NPM 安装。源码查找范围包括启动器所在目录及附近的祖先目录、其中的 `deepseek-harness` 子目录，以及 `%USERPROFILE%\deepseek-harness` 等位置。
+
+NPM 模式默认使用本项目的 `tools\dsh-npm` 目录。通过 `npm install -g` 安装的全局 DSH 不会被直接识别为这个本地安装。
+
+### 为什么再次双击没有检查更新？
+
+如果目标端口已经可以连接，启动器会直接打开浏览器，并跳过安装与更新流程。要检查更新，先关闭正在运行 DSH 的服务窗口，再启动一次。
+
+### 浏览器打开了，但页面不是 DSH，或者没有正常显示？
+
+当前启动器通过本地 TCP 端口判断服务是否可用，不会进一步验证响应是否来自 DSH。请查看服务窗口的输出，并确认端口没有被其他程序占用。需要换端口时，在启动器目录运行：
+
+```powershell
+$env:DSH_WEB_PORT = '3081'
+.\dsh-quicklauncher.cmd
+```
+
+启动器目前打开的是普通本地首页，不会自动拼接认证 token；如果 DSH 提示认证，请按其界面或服务日志中的说明操作。
+
+### 如何清除保存的运行方式？
+
+```powershell
+.\dsh-quicklauncher.cmd --reset
+```
+
+这只删除保存的模式和路径配置，保留已安装的 DSH、用户数据和跳过更新的记录。下次运行仍会自动查找已有安装，因此不一定重新显示安装菜单。
+
+已有两种可用安装时，可以通过 `DSH_LAUNCHER_MODE` 优先选择其中一种，见下方配置表。
+
+### 源码安装失败怎么办？
+
+查看安装窗口最后显示的错误。源码安装流程失败后，启动器会询问是否改用 NPM 模式，可以选择它继续完成安装。
+
+## 进阶配置
+
+以下变量在启动器运行前设置。例如，临时跳过更新检查：
+
+```powershell
+$env:DSH_LAUNCHER_SKIP_CHECK = '1'
+.\dsh-quicklauncher.cmd
+```
+
+这种写法只影响当前 PowerShell 会话及其启动的进程。从资源管理器双击时如需使用相同设置，请配置 Windows 用户环境变量。
+
+| 环境变量 | 作用与默认值 |
+| --- | --- |
+| `DSH_LAUNCHER_SKIP_CHECK=1` | 跳过更新检查；缺少安装时仍会进入安装流程 |
+| `DSH_LAUNCHER_MODE=source` 或 `npm` | 优先选择运行模式，覆盖保存的模式；目标安装须可用，否则会继续查找或引导安装 |
+| `DSH_LAUNCHER_REPO` | 指定源码安装或查找路径；默认安装到 `%USERPROFILE%\deepseek-harness` |
+| `DSH_LAUNCHER_TOOLS` | 指定 NPM 安装目录；默认为启动器目录下的 `tools\dsh-npm` |
+| `DSH_LAUNCHER_CONFIG` | 指定配置文件；默认为启动器目录下的 `.dsh-launch-config.json` |
+| `DSH_LAUNCHER_NO_AUTODISCOVER=1` | 关闭额外的源码目录自动搜索，仍会检查显式指定和保存的源码路径 |
+| `DSH_WEB_PORT` | Web 服务端口，默认为 `3080` |
+| `DSH_HOME` | 传给 DSH 的用户目录，默认为 `%USERPROFILE%\.dsh` |
+
+保存的有效安装路径会优先使用。需要更换目录时，可先用 `--reset` 清除配置，再设置路径变量后运行。
+
+## 文件与维护
+
+<details>
+<summary>展开查看目录、辅助工具与诊断参数</summary>
+
+### 主要文件
+
+```text
 dsh-quicklauncher/
-├── dsh-quicklauncher.cmd   # 双击入口（唯一需要点的文件）
-├── dsh-quicklauncher.ps1   # 启动器逻辑，必须和 .cmd 同级
-├── assets/                 # 全部图标素材
-│   ├── dsh-icon.ico        # 多尺寸 Windows 图标（16/24/32/48/64/128/256）
-│   ├── dsh-icon.svg        # 矢量源图，改图标从这里改
-│   ├── dsh-icon.png        # 512px PNG
-│   └── dsh-icon-<size>.png # 各尺寸 PNG 预览
-├── tools/                  # 生成与修复脚本，平时用不到
-│   ├── make-dsh-icon.mjs       # 从 SVG 生成 .ico 和全套 PNG
-│   ├── make-dsh-shortcut.ps1   # 创建桌面/开始菜单快捷方式
-│   └── fix-dsh-icon.ps1        # 修 Windows 图标缓存导致的旧图标
-├── .gitignore
+├── dsh-quicklauncher.cmd       # 双击入口
+├── dsh-quicklauncher.ps1       # 安装、检查更新与启动逻辑
+├── assets/                    # 图标及预览图
+├── tools/
+│   ├── make-dsh-shortcut.ps1   # 创建快捷方式
+│   ├── make-dsh-icon.mjs       # 生成图标素材
+│   └── fix-dsh-icon.ps1        # 修复快捷方式图标显示
+├── package.json               # 项目元数据与辅助命令
 ├── LICENSE
-├── package.json            # 仅用于元数据和脚本别名，不适合 npm 安装
 └── README.md
 ```
 
-运行后会额外生成（已在 `.gitignore` 中忽略）：
+运行过程中可能生成：
 
-| 路径 | 说明 |
+| 路径 | 用途 |
 | --- | --- |
-| `.dsh-launch-config.json` | 记住你选的模式和路径 |
-| `.dsh-launch-skip.txt` | 记住"暂不更新"的选择 |
-| `tools/dsh-npm/` | NPM 模式安装的依赖（约 214 MB） |
+| `.dsh-launch-config.json` | 保存运行模式、安装路径 |
+| `.dsh-launch-skip.txt` | 保存跳过更新的记录 |
+| `tools/dsh-npm/` | 默认的 NPM 模式安装目录 |
 
----
+以上路径已在 `.gitignore` 中忽略。DSH 用户目录由 `DSH_HOME` 决定，与启动器配置分开存放。
 
-## tools/ 里的脚本
+### 图标工具
 
 ```powershell
-# 重新生成图标（需要 node 和 sharp）
-node tools\make-dsh-icon.mjs
-node tools\make-dsh-icon.mjs --preview      # 顺便在终端打印 ASCII 构图预览
+# 重新生成图标；需要可加载的 sharp 模块
+node .\tools\make-dsh-icon.mjs
 
-# 重建快捷方式（桌面 + 开始菜单）
-powershell -ExecutionPolicy Bypass -File tools\make-dsh-shortcut.ps1 -StartMenu
+# 生成图标并输出终端预览
+node .\tools\make-dsh-icon.mjs --preview
 
-# 换过图标后桌面还显示旧的：刷新 Windows 图标缓存
-powershell -ExecutionPolicy Bypass -File tools\fix-dsh-icon.ps1 -RestartExplorer
+# 修复快捷方式的图标显示
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\fix-dsh-icon.ps1
 ```
 
-`make-dsh-icon.mjs` 需要 `sharp`。它会先试 `SHARP_PATH` 环境变量指定的路径，再试正常模块解析；如果本地装了 DSH，它的 profile 里通常就带着 sharp。
+图标配色、粒子与连线在 `tools/make-dsh-icon.mjs` 中调整；生成器会覆盖输出的 SVG、PNG 和 ICO。可以用 `SHARP_PATH` 指定已安装的 `sharp` 模块路径。
 
----
+### 常用诊断参数
 
-## 关于图标
+```powershell
+.\dsh-quicklauncher.cmd --smoke-version
+.\dsh-quicklauncher.cmd --smoke-launch
+```
 
-图标里的鲸鱼标志来自 DSH 开源仓库自带的 favicon（`apps/web/public/favicon.svg`），底色、网格和粒子是后加的。
+| 参数 | 行为 |
+| --- | --- |
+| `--smoke-version` | 有可用安装时输出模式、版本、工具链、端口与更新检测结果；缺少安装时输出路径检测信息 |
+| `--smoke-launch` | 有可用安装时打印解析出的启动命令，不启动服务 |
+| `--smoke-run` | 执行真实流程，但不打开浏览器、不等待结束时的按键；仍可能安装、更新、写配置并启动服务，也可能需要菜单输入 |
 
-改配色和粒子直接编辑 `tools/make-dsh-icon.mjs` 顶部的 `C`（调色板）、`PARTICLES`（光点坐标）、`LINKS`（连线），然后重跑 `node tools/make-dsh-icon.mjs`，`assets/dsh-icon.svg` 会同步重新生成。
+诊断参数不能一概视为“无副作用”：`--smoke-version` 会进行联网检查，源码模式可能执行 `git fetch`；源码模式的工具链检查也可能尝试安装缺失的 pnpm。
 
----
+维护脚本时，请保留 `dsh-quicklauncher.ps1` 的 **UTF-8 BOM** 和 `.cmd` 文件的 **CRLF 换行**，以兼容 Windows PowerShell 5.1 与命令提示符。
 
-## 安全性说明
+</details>
 
-**这个启动器会真的执行更新**，不是只提示。具体来说：
+## 贡献与许可
 
-- **源码模式**：会在你的 checkout 里跑 `git fetch` / `git merge --ff-only` / `pnpm install` / `pnpm run build`。它**不会**碰你的分支历史（只用快进合并），工作区有未提交改动时会拒绝自动更新。
-- **NPM 模式**：会跑 `npm install @deepseek-ai/dsh@latest`。
-- 两条路都**只在你从菜单里选"立即更新"之后**才执行。你不选，它就只启动。
-- 想完全禁掉更新检查：设 `DSH_LAUNCHER_SKIP_CHECK=1`。
+欢迎提交 [Issue](https://github.com/S1GHLE/dsh-quicklauncher/issues) 或 Pull Request。反馈问题时，请附上运行模式、Node.js 版本和相关错误输出，并移除密钥、token 等敏感信息。
 
-`git fetch` 只写入 `FETCH_HEAD`，不动工作区和本地分支。
+本项目以文件夹形式分发，未发布到 npm；它与 `dsh-quickstart` 是各自独立的社区项目。
 
----
+图标中的鲸鱼图形取自 DeepSeek Harness 仓库的 `apps/web/public/favicon.svg`，相关品牌与标志权利归原权利人所有。
 
-## 免责声明
-
-- 本项目是**社区作品**，由第三方维护，与 DeepSeek 官方**没有隶属、合作或授权关系**，也不代表官方背书。
-- **"DeepSeek Harness"** 是深度求索公司的注册商标。本项目遵循 [DeepSeek Harness 品牌素材使用规范](https://github.com/deepseek-ai/deepseek-harness/blob/master/BRAND_GUIDELINES.zh.md)：项目名使用社区推荐的 **DSH** 缩写，描述性文字中用 "DeepSeek Harness" 说明真实关系。
-- 本项目与 npm 上的 `dsh-quickstart` 项目**没有任何关系**，两者是各自独立的社区作品。
-- 图标中的鲸鱼标志版权归 DeepSeek 所有，取自其开源仓库，仅用于标识本工具的服务对象。
-- 使用本工具产生的任何后果（包括更新失败、构建失败、数据丢失）由使用者自行承担。
-
----
-
-## 贡献
-
-欢迎提 Issue 和 PR。
-
----
-
-## 许可
-
-[MIT](LICENSE)
+代码采用 [MIT License](LICENSE)。
