@@ -18,7 +18,7 @@ param(
     [switch]$Desktop = $true,
     [switch]$StartMenu,
     [string]$Launcher,
-    [string]$Name = 'dsh-keepup',
+    [string]$Name = 'dsh-quicklauncher',
     [string]$Directory
 )
 
@@ -37,7 +37,7 @@ function Resolve-Launcher {
         if (Test-Path -LiteralPath $candidate) { return $candidate }
         throw ('launcher not found: ' + $Explicit)
     }
-    foreach ($known in @('dsh-keepup.cmd', 'dsh.cmd')) {
+    foreach ($known in @('dsh-quicklauncher.cmd', 'dsh.cmd')) {
         $preferred = Join-Path $here $known
         if (Test-Path -LiteralPath $preferred) { return $preferred }
     }

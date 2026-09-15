@@ -1,4 +1,4 @@
-# Line-ending rules for dsh-keepup.
+# Line-ending rules for dsh-quicklauncher.
 #
 # Why this file exists: with core.autocrlf=true (the Git for Windows default)
 # and no .gitattributes, Git rewrites these files to LF on commit, which
@@ -6,8 +6,8 @@
 #
 #   - cmd.exe needs CRLF in .cmd files; goto labels and multi-line blocks can
 #     misparse on LF
-#   - dsh-keepup.ps1 must keep its UTF-8 BOM, because Windows PowerShell 5.1
-#     reads a BOM-less script as ANSI/GBK and turns the Chinese text into
+#   - dsh-quicklauncher.ps1 must keep its UTF-8 BOM, because Windows PowerShell
+#     5.1 reads a BOM-less script as ANSI/GBK and turns the Chinese text into
 #     mojibake or a parse error
 #
 # Every rule below is explicit: no catch-all, so no attribute conflicts. Files

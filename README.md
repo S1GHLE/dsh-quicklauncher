@@ -1,4 +1,4 @@
-# dsh-keepup
+# dsh-quicklauncher
 
 **DeepSeek Harness 的一键启动器：双击检查更新 → 按需更新 → 启动 Web UI。**
 
@@ -12,7 +12,7 @@ Windows 上双击一个图标就能用 DSH，而且不会让你停留在旧版�
 
 `dsh web` 本身没问题，问题在于**你会忘记更新它**。DSH 迭代很快（每周多个版本），等你哪天发现自己落后了几十个提交、或者构建产物早就过期时，通常已经踩到过时的 bug 了。
 
-`dsh-keepup` 在每次启动前插一步：
+`dsh-quicklauncher` 在每次启动前插一步：
 
 1. 探测 `127.0.0.1:3080`——DSH 已经在跑就直接开浏览器，不重复拉起第二个实例；
 2. 检查是否有更新，**有的话弹菜单让你选**"立即更新"还是"暂不更新"；
@@ -22,9 +22,13 @@ Windows 上双击一个图标就能用 DSH，而且不会让你停留在旧版�
 
 ### 和现成方案的区别
 
-DSH 启动器已经有人在做，主要是 [`dsh-quickstart`](https://www.npmjs.com/package/dsh-quickstart)。我们的侧重点不同：
+DSH 启动器已经有人在做，主要是 npm 上的 [`dsh-quickstart`](https://www.npmjs.com/package/dsh-quickstart)（第三方项目，作者 qzhqzh）。
 
-| | dsh-quickstart | **dsh-keepup** |
+> **注意别混淆**：本仓库叫 `dsh-quicklauncher`，是**文件夹分发**的社区作品，**没有发布到 npm**；它与 npm 上的 `dsh-quickstart` 是两个互不相关的项目，名字相近纯属巧合。
+
+我们的侧重点不同：
+
+| | `dsh-quickstart`（npm） | **`dsh-quicklauncher`**（本仓库） |
 | --- | --- | --- |
 | 双击启动 | ✅ | ✅ |
 | 就绪轮询 + 自动开浏览器 | ✅ | ✅ |
@@ -54,7 +58,7 @@ Windows PowerShell 5.1 即可，不需要 PowerShell 7。
 ## 快速开始
 
 1. 把这个文件夹放到任意位置（**别放进 DSH 源码目录里面**）；
-2. 双击 `dsh-keepup.cmd`；
+2. 双击 `dsh-quicklauncher.cmd`；
 3. 首次运行会让你选运行方式：
 
    ```
@@ -102,10 +106,10 @@ Windows PowerShell 5.1 即可，不需要 PowerShell 7。
 
 ```powershell
 # 双击即可，等价于：
-.\dsh-keepup.cmd
+.\dsh-quicklauncher.cmd
 
 # 或者直接调 PowerShell
-powershell -ExecutionPolicy Bypass -File dsh-keepup.ps1
+powershell -ExecutionPolicy Bypass -File dsh-quicklauncher.ps1
 ```
 
 ### 参数与开关
@@ -150,9 +154,9 @@ powershell -ExecutionPolicy Bypass -File dsh-keepup.ps1
 ## 目录结构
 
 ```
-dsh-keepup/
-├── dsh-keepup.cmd          # 双击入口（唯一需要点的文件）
-├── dsh-keepup.ps1          # 启动器逻辑，必须和 .cmd 同级
+dsh-quicklauncher/
+├── dsh-quicklauncher.cmd   # 双击入口（唯一需要点的文件）
+├── dsh-quicklauncher.ps1   # 启动器逻辑，必须和 .cmd 同级
 ├── assets/                 # 全部图标素材
 │   ├── dsh-icon.ico        # 多尺寸 Windows 图标（16/24/32/48/64/128/256）
 │   ├── dsh-icon.svg        # 矢量源图，改图标从这里改
@@ -221,6 +225,7 @@ powershell -ExecutionPolicy Bypass -File tools\fix-dsh-icon.ps1 -RestartExplorer
 
 - 本项目是**社区作品**，由第三方维护，与 DeepSeek 官方**没有隶属、合作或授权关系**，也不代表官方背书。
 - **"DeepSeek Harness"** 是深度求索公司的注册商标。本项目遵循 [DeepSeek Harness 品牌素材使用规范](https://github.com/deepseek-ai/deepseek-harness/blob/master/BRAND_GUIDELINES.zh.md)：项目名使用社区推荐的 **DSH** 缩写，描述性文字中用 "DeepSeek Harness" 说明真实关系。
+- 本项目与 npm 上的 `dsh-quickstart` 项目**没有任何关系**，两者是各自独立的社区作品。
 - 图标中的鲸鱼标志版权归 DeepSeek 所有，取自其开源仓库，仅用于标识本工具的服务对象。
 - 使用本工具产生的任何后果（包括更新失败、构建失败、数据丢失）由使用者自行承担。
 

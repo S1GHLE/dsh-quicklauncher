@@ -1,5 +1,5 @@
 ﻿# ============================================================================
-#  dsh-keepup.ps1  --  双击入口 dsh-keepup.cmd 的实际逻辑
+#  dsh-quicklauncher.ps1  --  双击入口 dsh-quicklauncher.cmd 的实际逻辑
 #
 #  两条运行路线，首次运行会问一次，之后记住：
 #    源码模式：git clone + pnpm install + pnpm run build，更新走 git pull
