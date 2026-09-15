@@ -1,0 +1,45 @@
+# Line-ending and byte-exactness rules.
+#
+# Without this file, core.autocrlf=true rewrites these files into LF on commit,
+# which silently breaks the Windows launcher:
+#   - cmd.exe needs CRLF in .cmd files (goto labels and blocks misparse on LF)
+#   - dsh-keepup.ps1 must keep its UTF-8 BOM, because Windows PowerShell 5.1
+#     reads a BOM-less script as ANSI/GBK and turns the Chinese text into
+#     mojibake or a parse error
+#
+# "* text=auto eol=lf" keeps the repository itself LF-normalized while the
+# explicit rules below protect the files that must not be touched.
+
+* text=auto eol=lf
+
+# Byte-exact: store and check out unchanged, so the BOM survives.
+dsh-keepup.ps1 -text
+
+# cmd.exe requires CRLF; store LF in the repo, check out CRLF.
+*.cmd text eol=crlf
+
+# Windows PowerShell scripts: same reason, and they double as editors' targets.
+*.ps1 text eol=crlf
+
+# Windows script hosts and shells.
+*.bat  text eol=crlf
+*.vbs  text eol=crlf
+
+# Documentation and source: LF everywhere.
+*.md       text eol=lf
+*.mjs      text eol=lf
+*.js       text eol=lf
+*.json     text eol=lf
+*.yml      text eol=lf
+*.yaml     text eol=lf
+*.svg      text eol=lf
+*.gitignore text eol=lf
+*.gitattributes text eol=lf
+
+# Binary assets: never diff, never convert.
+*.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary

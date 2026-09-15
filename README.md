@@ -22,7 +22,7 @@ Windows 上双击一个图标就能用 DSH，而且不会让你停留在旧版�
 
 ### 和现成方案的区别
 
-已经把 DSH 启动器这件事做得不错的项目是有的，主要是 [`dsh-quickstart`](https://www.npmjs.com/package/dsh-quickstart)——它的目标是"双击就跑，别让我看黑框"。两者的侧重点不同：
+DSH 启动器已经有人在做，主要是 [`dsh-quickstart`](https://www.npmjs.com/package/dsh-quickstart)。我们的侧重点不同：
 
 | | dsh-quickstart | **dsh-keepup** |
 | --- | --- | --- |
@@ -36,7 +36,7 @@ Windows 上双击一个图标就能用 DSH，而且不会让你停留在旧版�
 | 前置要求 | 需先 `npm i -g @deepseek-ai/dsh` | 只要 Node.js，其余它自己装 |
 | 分发形态 | npm 全局包 | 一个文件夹，拷走即用 |
 
-如果你只想"双击打开、别管更新"，`dsh-quickstart` 可能更合你意。如果你想"永远是最新的、而且不想手动折腾构建"，这就是为你做的。
+如果你只想"双击打开、别管更新"，`dsh-quickstart` 可能更合你意。如果你想"永远是最新的、而且不想手动折腾构建"，这款可能更合你意。
 
 ---
 
@@ -198,9 +198,7 @@ powershell -ExecutionPolicy Bypass -File tools\fix-dsh-icon.ps1 -RestartExplorer
 
 ## 关于图标
 
-图标里的鲸鱼标志来自 DSH 开源仓库自带的 favicon（`apps/web/public/favicon.svg`），底色、网格和粒子是后加的。生成器会**实测鲸鱼路径的墨迹包围盒**，再推导变换矩阵把它居中——因为那条路径的 `50x50` viewBox 里有大片空白，直接按 viewBox 居中是偏的。
-
-生成器还针对小尺寸做了单独处理：`16/24px` 会去掉网格和粒子、把鲸鱼放大到画幅 90%，因为这些细节在那个尺寸下只会糊成一团。
+图标里的鲸鱼标志来自 DSH 开源仓库自带的 favicon（`apps/web/public/favicon.svg`），底色、网格和粒子是后加的。
 
 改配色和粒子直接编辑 `tools/make-dsh-icon.mjs` 顶部的 `C`（调色板）、`PARTICLES`（光点坐标）、`LINKS`（连线），然后重跑 `node tools/make-dsh-icon.mjs`，`assets/dsh-icon.svg` 会同步重新生成。
 
@@ -230,13 +228,7 @@ powershell -ExecutionPolicy Bypass -File tools\fix-dsh-icon.ps1 -RestartExplorer
 
 ## 贡献
 
-欢迎提 Issue 和 PR。改动启动器时请注意几个已经踩过的坑：
-
-- `dsh-keepup.ps1` **必须保存为带 BOM 的 UTF-8**。Windows PowerShell 5.1 会把无 BOM 的脚本按系统 ANSI/GBK 读取，中文会变乱码甚至语法报错。
-- `tools/` 下的两个 `.ps1` **必须保持纯 ASCII**（同样原因，所以它们不写中文文件名，靠列目录自动发现启动器）。
-- `dsh-keepup.ps1` 的参数**必须从 `$args` 取，不能用 `param()`**：PowerShell 5.1 用 `-File` 启动时，`--` 开头的参数不会被绑定到 `param` 块。
-- 自定义函数的参数名前后要一致。Windows PowerShell 对**不存在的具名参数不报错**，只会静默地什么都不绑——这个坑让"自动检测源码环境"整个失效过一次。
-- `.cmd` 文件**必须用 CRLF 行尾**，`cmd.exe` 需要。
+欢迎提 Issue 和 PR。
 
 ---
 
